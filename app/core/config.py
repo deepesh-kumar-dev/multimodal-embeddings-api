@@ -1,3 +1,12 @@
+"""Application settings.
+
+Every setting can be overridden with an environment variable prefixed with
+EMBED_ (e.g. EMBED_MODEL_NAME) or in a .env file in the project root.
+See .env.example for the full list.
+
+Import the shared instance:  from app.core.config import settings
+"""
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -11,6 +20,7 @@ class Settings(BaseSettings):
     model_name: str = "clip-ViT-B-32"
     device: str | None = None  # "cpu", "cuda", or None to auto-detect
     max_batch_size: int = 64
+    log_level: str = "info"  # debug, info, warning, error
 
 
 settings = Settings()
