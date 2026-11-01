@@ -90,8 +90,16 @@ Every module starts with a docstring explaining what it does and where related c
 lives. See **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)** for the request flow, a
 debugging guide, and step-by-step instructions for adding features.
 
-## Tests
+## Development checks
+
+Run these before every commit:
 
 ```bash
-pytest
+ruff format app tests   # auto-format
+ruff check app tests    # lint: style, docstrings, type-hint coverage, likely bugs
+mypy app tests          # strict type checking
+pytest                  # tests
 ```
+
+Coding standards (Google-style docstrings, full type hints, naming) are described in
+[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#coding-standards).

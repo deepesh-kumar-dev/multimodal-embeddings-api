@@ -143,6 +143,45 @@ For a **completely new feature area** (not embeddings), create a new
 `app/api/router.py`, and add `app/schemas/<feature>.py` and, if it has logic,
 `app/services/<feature>.py`.
 
+### Coding standards
+
+Enforced by Ruff and mypy (configured in `pyproject.toml`). Run all checks before committing:
+
+```bash
+ruff format app tests && ruff check app tests && mypy app tests && pytest
+```
+
+- **Style**: PEP 8, max line length 100, imports sorted (Ruff formats this for you).
+- **Docstrings**: [Google style](https://google.github.io/styleguide/pyguide.html#38-comments-and-docstrings)
+  on every module, class and function, with `Args:`, `Returns:`, `Yields:` and
+  `Raises:` sections where they apply. Pydantic models and classes list their
+  fields under `Attributes:`.
+  ```python
+  def embed_texts(self, texts: list[str], normalize: bool = True) -> EmbeddingMatrix:
+      """Embed a batch of texts.
+
+      Args:
+          texts: Texts to embed.
+          normalize: If True, scale each vector to unit length.
+
+      Returns:
+          Array of shape (len(texts), dimensions).
+      """
+  ```
+- **Type hints**: required on every function argument and return value, and on
+  variables. mypy runs in `strict` mode.
+  - Module-level constants use `Final`: `ENDPOINT: Final[str] = "/embed/text"`.
+  - Fixed sets of values use `Literal`: `log_level: Literal["debug", "info", ...]`.
+  - Use built-in generics (`list[str]`, `dict[str, Any]`, `str | None`), not
+    `typing.List` / `Optional`.
+  - Name repeated complex types once, e.g. `EmbeddingMatrix` in `app/services/embedding.py`.
+- **Comments**: explain *why*, not *what*. The docstring says what a function does;
+  an inline comment is for non-obvious decisions (e.g. why a route is `def`, not `async def`).
+- **Naming**: `snake_case` functions and variables, `PascalCase` classes,
+  `UPPER_CASE` constants, leading `_` for private helpers and attributes.
+- **Tests**: one test per behavior, named `test_<what_it_checks>`, with a one-line
+  docstring stating the expected behavior.
+
 ### Conventions
 
 - Use plain `def` (not `async def`) for routes that run the model, so they run in a
